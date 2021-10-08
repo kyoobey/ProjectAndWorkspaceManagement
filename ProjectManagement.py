@@ -68,8 +68,8 @@ class NewProjectPathInputHandler(sublime_plugin.TextInputHandler):
 
 class NewProjectCommand(sublime_plugin.ApplicationCommand):
 
-	def run(self, path):
-		path = Path(path)
+	def run(self, new_project_path):
+		path = Path(new_project_path)
 		project_name = path.name
 
 		path.mkdir(parents=True)
@@ -145,7 +145,7 @@ class NewWorkspaceCommand(sublime_plugin.WindowCommand):
 		with open(workspace_path, 'w') as f:
 			f.write('{"project":"'+ variables['project'] +'"}')
 
-		subl('-n', '--project', workspace_path)
+		subl('--project', workspace_path)
 
 	def input(self, args):
 		global variables
