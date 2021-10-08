@@ -79,10 +79,16 @@ class NewProjectCommand(sublime_plugin.ApplicationCommand):
 		with open(project_file_path, 'w') as f:
 			f.write(DEFAULT_PROJECT_FILE_TEXT)
 
+		gitignore_file_path = path / '.gitignore'
+		# make .gitignore file
+		print(gitignore_file_path)
+		with open(gitignore_file_path, 'w') as f:
+			f.write('#folders\n.sublime_workspaces/')
+
 		path = path/'.sublime_workspaces'
 		path.mkdir(parents=True)
 
-		# make project file
+		# make workspace file inside workspace folder
 		workspace_path = path / ('w1 '+project_name+'.sublime-workspace')
 		with open(workspace_path, 'w') as f:
 			f.write('{"project":"'+ str(project_file_path) +'"}')
