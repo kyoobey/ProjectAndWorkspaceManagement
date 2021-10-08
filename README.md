@@ -5,5 +5,5 @@ A Project Management plugin for Sublime Text.
 # Commands
 | Commands    | Function |
 |-------------|----------|
-| New Project | Creates new project files (`<project>.sublime-project` and `.sublime-workspaces` folder) at the specified path |
+| New Project | Creates new project files (`<project>.sublime-project`, `.sublime-workspaces` folder and `.gitignore`) at the specified path |
 
