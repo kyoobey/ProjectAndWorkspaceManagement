@@ -2,5 +2,9 @@
 	{
 		"caption": "Project Management: New Project",
 		"command": "new_project"
+	},
+	{
+		"caption": "Project Management: New Workspace",
+		"command": "new_workspace"
 	}
 ]

@@ -43,7 +43,7 @@ def subl(*args):
 
 
 
-class PathInputHandler(sublime_plugin.TextInputHandler):
+class NewProjectPathInputHandler(sublime_plugin.TextInputHandler):
 
 	def initial_text(self):
 		return "/projects/<full_project_path>"
@@ -96,7 +96,63 @@ class NewProjectCommand(sublime_plugin.ApplicationCommand):
 		subl('-n', '--project', workspace_path)
 
 	def input(self, args):
-		return PathInputHandler()
+		return NewProjectPathInputHandler()
 
 	def input_description(self):
 		return "Path"
+
+
+
+class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
+
+	def initial_text(self):
+		global variables
+		if 'project_name' in variables.keys():
+			if (Path(variables['project_path']) / ('.sublime_workspaces/w1 '+variables['project_base_name']+'.sublime-workspace')).exists():
+				n = sorted([int(x.name.split(' ')[0][1:]) for x in (Path(variables['project_path']) / '.sublime_workspaces').glob('**/*')])[-1]
+				return f'w{str(n+1)} {variables["project_base_name"]}'
+		return 'workspace name'
+
+	def placeholder(Self):
+		return "Enter new workspace name"
+
+	def description(self, text):
+		return 'name'
+
+	def preview(self, text):
+		if (Path(variables['project_path']) / (f'.sublime_workspaces/{text}.sublime-workspace')).exists():
+			return sublime.Html(f"<b>Workspace already exists</b>")
+		return sublime.Html(f"<strong>Creating New workspace</strong> <em>{text}</em>")
+
+	def validate(self, text):
+		if (Path(variables['project_path']) / (f'.sublime_workspaces/{text}.sublime-workspace')).exists():
+			return False
+		return True
+
+
+
+variables = None
+
+class NewWorkspaceCommand(sublime_plugin.WindowCommand):
+
+	def run(self, new_workspace_name):
+		path = Path(variables['project_path']) / '.sublime_workspaces'
+		if not path.exists():
+			path.mkdir(parents=True)
+
+		# make workspace file inside workspace folder
+		workspace_path = path / (new_workspace_name+'.sublime-workspace')
+		with open(workspace_path, 'w') as f:
+			f.write('{"project":"'+ variables['project'] +'"}')
+
+		subl('-n', '--project', workspace_path)
+
+	def input(self, args):
+		global variables
+		variables = self.window.extract_variables()
+
+		return NewWorkspaceNameInputHandler()
+
+	def input_description(self):
+		return "Name"
+
