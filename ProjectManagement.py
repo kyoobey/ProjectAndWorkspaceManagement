@@ -91,6 +91,9 @@ class NewProjectCommand(sublime_plugin.ApplicationCommand):
 		# make workspace file inside workspace folder
 		workspace_path = path / ('w1 '+project_name+'.sublime-workspace')
 		with open(workspace_path, 'w') as f:
+			if sublime.platform() == "windows":
+				project_file_path = str(project_file_path).replace("\\",'/')
+				project_file_path = '/'+project_file_path.replace(':','')
 			f.write('{"project":"'+ str(project_file_path) +'"}')
 
 		subl('-n', '--project', workspace_path)
@@ -146,7 +149,12 @@ class NewWorkspaceCommand(sublime_plugin.WindowCommand):
 		# make workspace file inside workspace folder
 		workspace_path = path / (new_workspace_name+'.sublime-workspace')
 		with open(workspace_path, 'w') as f:
-			f.write('{"project":"'+ variables['project'] +'"}')
+			project_file_path = variables['project']
+			if sublime.platform() == "windows":
+				project_file_path = project_file_path.replace("\\",'/')
+				project_file_path = '/'+project_file_path.replace(':','')
+				print(project_file_path)
+			f.write('{"project":"'+ project_file_path +'"}')
 
 		subl('--project', workspace_path)
 
