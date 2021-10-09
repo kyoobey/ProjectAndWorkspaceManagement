@@ -108,9 +108,12 @@ class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 	def initial_text(self):
 		global variables
 		if 'project_name' in variables.keys():
-			if (Path(variables['project_path']) / ('.sublime_workspaces/w1 '+variables['project_base_name']+'.sublime-workspace')).exists():
-				n = sorted([int(x.name.split(' ')[0][1:]) for x in (Path(variables['project_path']) / '.sublime_workspaces').glob('**/*')])[-1]
-				return f'w{str(n+1)} {variables["project_base_name"]}'
+			try:
+				if (Path(variables['project_path']) / ('.sublime_workspaces/w1 '+variables['project_base_name']+'.sublime-workspace')).exists():
+					n = sorted([int(x.name.split(' ')[0][1:]) for x in (Path(variables['project_path']) / '.sublime_workspaces').glob('**/*')])[-1]
+					return f'w{str(n+1)} {variables["project_base_name"]}'
+			except Exception:
+				pass
 		return 'workspace name'
 
 	def placeholder(Self):
