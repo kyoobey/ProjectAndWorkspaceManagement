@@ -83,7 +83,6 @@ class NewProjectCommand(sublime_plugin.ApplicationCommand):
 
 		gitignore_file_path = path / '.gitignore'
 		# make .gitignore file
-		print(gitignore_file_path)
 		with open(gitignore_file_path, 'w') as f:
 			f.write('#folders\n.sublime_workspaces/')
 
@@ -153,7 +152,6 @@ class NewWorkspaceCommand(sublime_plugin.WindowCommand):
 			if sublime.platform() == "windows":
 				project_file_path = project_file_path.replace("\\",'/')
 				project_file_path = '/'+project_file_path.replace(':','')
-				print(project_file_path)
 			f.write('{"project":"'+ project_file_path +'"}')
 
 		subl('--project', workspace_path)
@@ -203,7 +201,6 @@ class OpenWorkspaceCommand(sublime_plugin.WindowCommand):
 	def run(self, open_workspace_index):
 		path = Path(variables['project_path']) / '.sublime_workspaces/'
 		file_names = [x for x in (path).glob('**/*') if x.is_file()]
-		print(file_names[open_workspace_index])
 
 		subl('--project', file_names[open_workspace_index])
 
