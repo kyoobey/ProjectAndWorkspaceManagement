@@ -16,6 +16,8 @@ DEFAULT_PROJECT_FILE_TEXT = """{
 }"""
 
 
+variables = None
+
 #####################
 # function taken from
 # https://github.com/randy3k/ProjectManager/blob/fdfd0372cf8ef705ac8a6c352e9c6ce21df1b0de/project_manager.py#L52
@@ -137,8 +139,6 @@ class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 
 
 
-variables = None
-
 class NewWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, new_workspace_name):
@@ -166,4 +166,53 @@ class NewWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def input_description(self):
 		return "Name"
+
+
+
+class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
+
+	def list_items(self):
+		try:
+			path = Path(variables['project_path']) / '.sublime_workspaces/'
+			self.file_name_paths = [x for x in (path).glob('**/*') if x.is_file()]
+			self.file_names = [x.name.replace('.sublime-workspace','') for x in self.file_name_paths]
+			return [(x, i) for i,x in enumerate(self.file_names)]
+		except Exception:
+			return [(' ', -1)]
+
+	def preview(self, value):
+		try:
+			if not (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+				return sublime.Html(f"<b>No workspaces found</b>")
+		except Exception:
+			return sublime.Html("No open projects")
+		return sublime.Html(f"<strong>Opening workspace</strong> {self.file_names[value]}")
+
+	def validate(self, value):
+		try:
+			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+				return True
+		except Exception:
+			pass
+		return False
+
+
+
+class OpenWorkspaceCommand(sublime_plugin.WindowCommand):
+
+	def run(self, open_workspace_index):
+		path = Path(variables['project_path']) / '.sublime_workspaces/'
+		file_names = [x for x in (path).glob('**/*') if x.is_file()]
+		print(file_names[open_workspace_index])
+
+		subl('--project', file_names[open_workspace_index])
+
+	def input(self, args):
+		global variables
+		variables = self.window.extract_variables()
+
+		return OpenWorkspaceIndexInputHandler()
+
+	def input_description(self):
+		return "Workspace"
 
