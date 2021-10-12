@@ -186,7 +186,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 				return sublime.Html(f"<b>No workspaces found</b>")
 		except Exception:
 			return sublime.Html("No open projects")
-		return sublime.Html(f"<strong>Opening workspace</strong> {self.file_names[value]}")
+		# return sublime.Html(f"<strong>Opening workspace</strong> {self.file_names[value]}")
 
 	def validate(self, value):
 		try:
