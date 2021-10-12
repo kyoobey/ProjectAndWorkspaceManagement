@@ -15,6 +15,7 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 # Todo
 - [x] create new project
 - [ ] import old project
+- [ ] create project files at existing folder
 - [x] create new workspace
 - [x] switch between workspaces
 
