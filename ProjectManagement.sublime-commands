@@ -6,5 +6,9 @@
 	{
 		"caption": "Project Management: New Workspace",
 		"command": "new_workspace"
+	},
+	{
+		"caption": "Project Management: Open Workspace",
+		"command": "open_workspace"
 	}
 ]
