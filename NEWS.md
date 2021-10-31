@@ -1,3 +1,6 @@
+# 0.0.3
+- renamed plugin from `Project Management` to `Project And Workspace Management`
+
 # 0.0.2
 - commands: `open workspace`
 

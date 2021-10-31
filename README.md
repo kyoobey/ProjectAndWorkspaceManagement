@@ -1,5 +1,5 @@
-# Project Management for [Sublime Text](https://www.sublimetext.com)
-A Project Management plugin for Sublime Text.
+# Project And Workspace Management
+A Project and Workspace Management plugin for [Sublime Text](https://www.sublimetext.com).
 > This project was inspired by https://github.com/randy3k/ProjectManager
 
 # Functionality
