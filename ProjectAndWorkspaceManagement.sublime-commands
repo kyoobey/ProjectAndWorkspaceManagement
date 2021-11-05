@@ -1,14 +1,14 @@
 [
 	{
 		"caption": "Project Management: New Project",
-		"command": "new_project"
+		"command": "project_and_workspace_management_new_project"
 	},
 	{
 		"caption": "Project Management: New Workspace",
-		"command": "new_workspace"
+		"command": "project_and_workspace_management_new_workspace"
 	},
 	{
 		"caption": "Project Management: Open Workspace",
-		"command": "open_workspace"
+		"command": "project_and_workspace_management_open_workspace"
 	}
 ]

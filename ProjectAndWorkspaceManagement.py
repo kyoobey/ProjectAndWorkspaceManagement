@@ -68,7 +68,7 @@ class NewProjectPathInputHandler(sublime_plugin.TextInputHandler):
 
 
 
-class NewProjectCommand(sublime_plugin.ApplicationCommand):
+class ProjectAndWorkspaceManagementNewProjectCommand(sublime_plugin.ApplicationCommand):
 
 	def run(self, new_project_path):
 		path = Path(new_project_path)
@@ -138,7 +138,7 @@ class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 
 
 
-class NewWorkspaceCommand(sublime_plugin.WindowCommand):
+class ProjectAndWorkspaceManagementNewWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, new_workspace_name):
 		path = Path(variables['project_path']) / '.sublime_workspaces'
@@ -196,7 +196,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 
 
 
-class OpenWorkspaceCommand(sublime_plugin.WindowCommand):
+class ProjectAndWorkspaceManagementOpenWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, open_workspace_index):
 		path = Path(variables['project_path']) / '.sublime_workspaces/'
