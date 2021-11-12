@@ -184,7 +184,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 				return sublime.Html(f"<b>No workspaces found</b>")
 		except Exception:
 			return sublime.Html("No open projects")
-		# return sublime.Html(f"<strong>Opening workspace</strong> {self.file_names[value]}")
+		return sublime.Html(f"<strong>Opening workspace</strong> {self.file_names[value]}")
 
 	def validate(self, value):
 		try:
@@ -212,4 +212,42 @@ class ProjectAndWorkspaceManagementOpenWorkspaceCommand(sublime_plugin.WindowCom
 
 	def input_description(self):
 		return "Workspace"
+
+
+
+class ProjectAndWorkspaceManagementCreateProjectFilesAtExistingFolderCommand(sublime_plugin.WindowCommand):
+
+	def run(self):
+		global variables
+		variables = self.window.extract_variables()
+		path = Path(variables['folder'])
+		project_name = path.name
+
+		# path.mkdir(parents=True)
+
+		project_file_path = path / (project_name+'.sublime-project')
+		# make project file
+		with open(project_file_path, 'w') as f:
+			f.write(DEFAULT_PROJECT_FILE_TEXT)
+
+		gitignore_file_path = path / '.gitignore'
+		# make .gitignore file
+		with open(gitignore_file_path, 'a') as f:
+			f.write('\n.sublime_workspaces/')
+
+		try:
+			path = path/'.sublime_workspaces'
+			path.mkdir(parents=True)
+
+			# make workspace file inside workspace folder
+			workspace_path = path / ('w1 '+project_name+'.sublime-workspace')
+			with open(workspace_path, 'w') as f:
+				if sublime.platform() == "windows":
+					project_file_path = str(project_file_path).replace("\\",'/')
+					project_file_path = '/'+project_file_path.replace(':','')
+				f.write('{"project":"'+ str(project_file_path) +'"}')
+		except Exception as e:
+			pass
+
+		subl('-n', '--project', workspace_path)
 

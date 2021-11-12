@@ -1,14 +1,18 @@
 [
 	{
-		"caption": "Project Management: New Project",
+		"caption": "Project And Worspsace Management: New Project",
 		"command": "project_and_workspace_management_new_project"
 	},
 	{
-		"caption": "Project Management: New Workspace",
+		"caption": "Project And Worspsace Management: New Workspace",
 		"command": "project_and_workspace_management_new_workspace"
 	},
 	{
-		"caption": "Project Management: Open Workspace",
+		"caption": "Project And Worspsace Management: Open Workspace",
 		"command": "project_and_workspace_management_open_workspace"
+	},
+	{
+		"caption": "Project And Workspace Management: Create Project Files At Existing Folder",
+		"command": "project_and_workspace_management_create_project_files_at_existing_folder"
 	}
 ]

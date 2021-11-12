@@ -15,10 +15,10 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 # Todo
 - [x] create new project
 - [ ] import old project
-- [ ] create project files at existing folder
+- [x] create project files at existing folder
 - [x] create new workspace
-- [ ] switch between workspaces
+- [x] switch between workspaces
 - [ ] rename workspaces
 
 # License
-Project Management is [MIT licensed](https://github.com/tshrpl/ProjectManagement/blob/master/LICENSE.txt).
+Project And Workspace Management is [MIT licensed](https://github.com/tshrpl/ProjectManagement/blob/master/LICENSE.txt).
