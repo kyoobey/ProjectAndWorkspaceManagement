@@ -1,3 +1,6 @@
+# 0.0.4
+- commands: `create project files at existing folder`
+
 # 0.0.3
 - renamed plugin from `Project Management` to `Project And Workspace Management`
 
