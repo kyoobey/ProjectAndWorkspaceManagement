@@ -11,6 +11,7 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 | New Project    | Creates new project files (`<project>.sublime-project`, `.sublime-workspaces` folder and `.gitignore`) at the specified path |
 | New Workspace  | Creates new workspace file inside `.sublime-workspaces` folder |
 | Open Workspace | Opens existing workspace in a new window |
+| Create Project at existing folder | Create Project files at currently open folder (if any) |
 
 # Todo
 - [x] create new project
