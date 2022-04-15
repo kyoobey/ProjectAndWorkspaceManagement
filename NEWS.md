@@ -1,3 +1,6 @@
+# 0.0.5
+- commands: `import project files at current folder`
+
 # 0.0.4
 - commands: `create project files at existing folder`
 
