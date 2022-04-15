@@ -12,10 +12,11 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 | New Workspace  | Creates new workspace file inside `.sublime-workspaces` folder |
 | Open Workspace | Opens existing workspace in a new window |
 | Create Project at existing folder | Create Project files at currently open folder (if any) |
+| Import Project Files At Current Folder | Edits `workspace` files inside `.sublime_workspaces/` to work with the new project path and rename Project/Workspace files (__use with caution__ and __only use once on a copied/moved project__)
 
 # Todo
 - [x] create new project
-- [ ] import old project
+- [x] import old project
 - [x] create project files at existing folder
 - [x] create new workspace
 - [x] switch between workspaces
