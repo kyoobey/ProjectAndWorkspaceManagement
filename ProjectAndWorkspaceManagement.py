@@ -1,6 +1,8 @@
 import sublime
 import sublime_plugin
 from pathlib import Path
+import os
+import json
 import subprocess
 
 
@@ -14,6 +16,24 @@ DEFAULT_PROJECT_FILE_TEXT = """{
 		}
 	]
 }"""
+
+
+#####################
+# helper functions
+
+def set_platform_specific_path(platform, path):
+	if type(path)!=str: path = str(path)
+	if platform == 'windows':
+		path = path.replace("\\",'/')
+		path = '/'+path.replace(':','')
+	return path
+
+def get_platform_specific_path(platform, path):
+	if type(path)!=str: path = str(path)
+	if platform == 'windows':
+		path = path[1]+':\\'+path[2:].replace('/', '\\')
+	return path
+
 
 
 variables = None
@@ -148,10 +168,7 @@ class ProjectAndWorkspaceManagementNewWorkspaceCommand(sublime_plugin.WindowComm
 		# make workspace file inside workspace folder
 		workspace_path = path / (new_workspace_name+'.sublime-workspace')
 		with open(workspace_path, 'w') as f:
-			project_file_path = variables['project']
-			if sublime.platform() == "windows":
-				project_file_path = project_file_path.replace("\\",'/')
-				project_file_path = '/'+project_file_path.replace(':','')
+			project_file_path = set_platform_specific_path(sublime_plugin.platform(), variables['project'])
 			f.write('{"project":"'+ project_file_path +'"}')
 
 		subl('--project', workspace_path)
@@ -250,4 +267,45 @@ class ProjectAndWorkspaceManagementCreateProjectFilesAtExistingFolderCommand(sub
 			pass
 
 		subl('-n', '--project', workspace_path)
+
+
+class projectAndWorkspaceManagementImportProjectFilesAtCurrentFolder(sublime_plugin.WindowCommand):
+
+	def run(self):
+		global variables
+		variables = self.window.extract_variables()
+		path = Path(variables['folder'])
+		project_name = path.name
+
+		workspaces_data = []
+		for workspace_file_path in path.glob('.sublime_workspaces/*.sublime-workspace'):
+			with open(workspace_file_path, 'r') as workspace_file:
+				workspaces_data.append((json.loads(workspace_file.read()), workspace_file_path))
+		
+		for (workspace_data, workspace_file_path) in workspaces_data:
+			old_project_name = workspace_data['project'].split('/')[-2]
+			old_project_path = '/'.join(workspace_data['project'].split('/')[:-1])
+
+			for buffer_data in workspace_data['buffers']:
+				buffer_data['file'] = set_platform_specific_path(sublime.platform(), path) + buffer_data['file'].replace(old_project_path, '')
+
+			workspace_data['expanded_folders'] = [ set_platform_specific_path(sublime.platform(), path) + expanded_folder_data.replace(old_project_path, '') for expanded_folder_data in workspace_data['expanded_folders'] ]
+
+			for group_data in workspace_data['groups']:
+				for sheet_data in group_data['sheets']:
+					sheet_data['file'] = set_platform_specific_path(sublime.platform(), path) + sheet_data['file'].replace(old_project_path, '')
+
+			workspace_data['project'] = set_platform_specific_path(sublime.platform(), path / (path.name+'.sublime-project'))
+
+			with open(str(workspace_file_path).replace(old_project_name, path.name), 'w') as f:
+				f.write(json.dumps(workspace_data))
+
+			subl('-n', '--project', workspace_file_path)
+
+		for _, path in workspaces_data:
+			os.remove(path)
+
+		for project_file_path in path.glob('*.sublime-project'):
+			os.rename(project_file_path, str(project_file_path).replace(project_file_path.name.replace('.sublime-project', ''), path.name))
+
 
