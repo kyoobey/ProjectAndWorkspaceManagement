@@ -297,13 +297,14 @@ class projectAndWorkspaceManagementImportProjectFilesAtCurrentFolder(sublime_plu
 
 			workspace_data['project'] = set_platform_specific_path(sublime.platform(), path / (path.name+'.sublime-project'))
 
-			with open(str(workspace_file_path).replace(old_project_name, path.name), 'w') as f:
+			new_workspace_file_path = str(workspace_file_path).replace(old_project_name, path.name)
+			with open(new_workspace_file_path, 'w') as f:
 				f.write(json.dumps(workspace_data))
 
-			subl('-n', '--project', workspace_file_path)
+			subl('-n', '--project', new_workspace_file_path)
 
-		for _, path in workspaces_data:
-			os.remove(path)
+		for _, p in workspaces_data:
+			os.remove(p)
 
 		for project_file_path in path.glob('*.sublime-project'):
 			os.rename(project_file_path, str(project_file_path).replace(project_file_path.name.replace('.sublime-project', ''), path.name))
