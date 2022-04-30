@@ -4,6 +4,7 @@ A Project and Workspace Management plugin for [Sublime Text 4](https://www.subli
 
 # Functionality
 This plugin helps you manage your sublime workspace files. You can create and quickly switch between multiple workspaces for a single sublime text project. Extra functionality to be added (see [Todo Section](https://github.com/tshrpl/ProjectManagement#Todo)).
+> Please open the one of the `.sublime-workspace` files to open a project because opening the `.sublime-project` file will create a new workspace at the root instead of the hidden folder!
 
 # Commands
 | Commands       | Function |
