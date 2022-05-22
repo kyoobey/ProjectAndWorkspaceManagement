@@ -168,7 +168,7 @@ class ProjectAndWorkspaceManagementNewWorkspaceCommand(sublime_plugin.WindowComm
 		# make workspace file inside workspace folder
 		workspace_path = path / (new_workspace_name+'.sublime-workspace')
 		with open(workspace_path, 'w') as f:
-			project_file_path = set_platform_specific_path(sublime_plugin.platform(), variables['project'])
+			project_file_path = set_platform_specific_path(sublime.platform(), variables['project'])
 			f.write('{"project":"'+ project_file_path +'"}')
 
 		subl('--project', workspace_path)
