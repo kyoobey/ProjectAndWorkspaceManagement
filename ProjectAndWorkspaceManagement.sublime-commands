@@ -12,6 +12,14 @@
 		"command": "project_and_workspace_management_open_workspace"
 	},
 	{
+		"caption": "Project And Worspsace Management: Rename Workspace",
+		"command": "project_and_workspace_management_rename_workspace"
+	},
+	{
+		"caption": "Project And Worspsace Management: Delete Workspace",
+		"command": "project_and_workspace_management_delete_workspace"
+	},
+	{
 		"caption": "Project And Workspace Management: Create Project Files At Existing Folder",
 		"command": "project_and_workspace_management_create_project_files_at_existing_folder"
 	},

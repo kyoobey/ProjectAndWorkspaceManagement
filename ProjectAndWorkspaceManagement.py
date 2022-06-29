@@ -232,6 +232,124 @@ class ProjectAndWorkspaceManagementOpenWorkspaceCommand(sublime_plugin.WindowCom
 
 
 
+class GetWorkspaceIndexToRenameInputHandler(sublime_plugin.ListInputHandler):
+
+	def list_items(self):
+		try:
+			path = Path(variables['project_path']) / '.sublime_workspaces/'
+			self.file_name_paths = [x for x in (path).glob('**/*') if x.is_file()]
+			self.file_names = [x.name.replace('.sublime-workspace','') for x in self.file_name_paths]
+			return [(x, i) for i,x in enumerate(self.file_names)]
+		except Exception:
+			return [(' ', -1)]
+
+	def preview(self, value):
+		try:
+			if not (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+				return sublime.Html(f"<b>No workspaces found</b>")
+		except Exception:
+			return sublime.Html("No open projects")
+		return sublime.Html(f"<strong>Renaming workspace</strong> {self.file_names[value]}")
+
+	def validate(self, value):
+		try:
+			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+				return True
+		except Exception:
+			pass
+		return False
+
+	def next_input(self, args):
+		return RenameWorkspaceNameInputHandler()
+
+
+class RenameWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
+
+	def initial_text(self):
+		return 'New workspace name'
+
+	def preview(self, value):
+		return f"renaming to {value}.sublime-workspace"
+
+
+
+class ProjectAndWorkspaceManagementRenameWorkspaceCommand(sublime_plugin.WindowCommand):
+
+	def run(self, get_workspace_index_to_rename, rename_workspace_name):
+		path = Path(variables['project_path']) / '.sublime_workspaces/'
+		current_workspace_path = [x for x in (path).glob('**/*') if x.is_file()][get_workspace_index_to_rename]
+		new_path = Path(current_workspace_path.parent, rename_workspace_name + current_workspace_path.suffix)
+
+		current_workspace_path.rename(new_path)
+		subl('--project', new_path)
+
+	def input(self, args):
+		global variables
+		variables = self.window.extract_variables()
+
+		if not args.get('open_workspace'):
+			return GetWorkspaceIndexToRenameInputHandler()
+
+		if not args.get('rename_workspace_name'):
+			return RenameWorkspaceNameInputHandler()
+
+	def input_description(self):
+		return "Rename Workspace"
+
+
+
+class GetWorkspaceIndexToDeleteInputHandler(sublime_plugin.ListInputHandler):
+
+	def list_items(self):
+		r = []
+		try:
+			path = Path(variables['project_path']) / '.sublime_workspaces/'
+			self.file_name_paths = [x for x in (path).glob('**/*') if x.is_file()]
+			self.file_names = [x.name.replace('.sublime-workspace','') for x in self.file_name_paths]
+			r += [(x, i) for i,x in enumerate(self.file_names)]
+		except Exception:
+			pass
+		if len(r)<1: r += [(' ', -1)]
+		return r
+
+	def preview(self, value):
+		try:
+			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+				if any((Path(variables['project_path']) / '.sublime_workspaces/').iterdir()):
+					return sublime.Html(f"<strong>Deleting workspace</strong> {self.file_names[value]}")
+		except Exception:
+			return sublime.Html("No open projects")
+		return sublime.Html(f"<b>No workspaces found</b>")
+
+	def validate(self, value):
+		try:
+			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+				if any((Path(variables['project_path']) / '.sublime_workspaces/').iterdir()):
+					return True
+		except Exception:
+			pass
+		return False
+
+
+
+class ProjectAndWorkspaceManagementDeleteWorkspaceCommand(sublime_plugin.WindowCommand):
+
+	def run(self, get_workspace_index_to_delete):
+		path = Path(variables['project_path']) / '.sublime_workspaces/'
+		current_workspace_path = [x for x in (path).glob('**/*') if x.is_file()][get_workspace_index_to_delete]
+
+		current_workspace_path.unlink()
+
+	def input(self, args):
+		global variables
+		variables = self.window.extract_variables()
+		return GetWorkspaceIndexToDeleteInputHandler()
+
+	def input_description(self):
+		return "Delete Workspace"
+
+
+
 class ProjectAndWorkspaceManagementCreateProjectFilesAtExistingFolderCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
