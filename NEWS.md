@@ -1,3 +1,14 @@
+# 0.1.2
+- commands: `rename workspace` and `delete workspace`
+
+# 0.1.1
+- bug fix for not opening new workspaces automatically in command `new workspace`
+
+# 0.1.0
+- first release
+- bug fix for command `import project files at current folder`
+  solves #3
+
 # 0.0.5
 - commands: `import project files at current folder`
 
