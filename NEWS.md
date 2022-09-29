@@ -1,3 +1,7 @@
+# 0.1.3
+- commands: `edit settings`
+- added a default `sublime-settings` file and user overrides
+
 # 0.1.2
 - commands: `rename workspace` and `delete workspace`
 
