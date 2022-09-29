@@ -9,6 +9,7 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 # Commands
 | Commands       | Function |
 |----------------|----------|
+| Edit Settings  | Opens a window with the default, non-editable settings on the left and user overrides file on the right, closes when the user file is closed |
 | New Project    | Creates new project files (`<project>.sublime-project`, `.sublime-workspaces` folder and `.gitignore`) at the specified path |
 | New Workspace  | Creates new workspace file inside `.sublime-workspaces` folder |
 | Open Workspace | Opens existing workspace in a new window |
@@ -17,15 +18,11 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 | Create Project at existing folder | Create Project files at currently open folder (if any) |
 | Import Project Files At Current Folder | Edits `workspace` files inside `.sublime_workspaces/` to work with the new project path and rename Project/Workspace files (__use with caution__ and __only use once on a copied/moved project__)
 
+# Settings
+> todo, will link to it when done writing
+
 # Todo
-- [x] create new project
-- [x] import old project
-- [x] create project files at existing folder
-- [x] create new workspace
-- [x] switch between workspaces
-- [x] rename workspaces
-- [x] delete workspaces
-- [ ] (store and) search for existing project files on disk
+- [ ] store and search for existing project files on disk
 
 # License
 Project And Workspace Management is [MIT licensed](https://github.com/tshrpl/ProjectManagement/blob/master/LICENSE.txt).
