@@ -19,7 +19,7 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 | Import Project Files At Current Folder | Edits `workspace` files inside `.sublime_workspaces/` to work with the new project path and rename Project/Workspace files (__use with caution__ and __only use once on a copied/moved project__)
 
 # Settings
-> todo, will link to it when done writing
+> todo, will link to the wiki page when its done
 
 # Todo
 - [ ] store and search for existing project files on disk
