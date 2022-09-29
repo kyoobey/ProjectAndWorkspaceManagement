@@ -1,0 +1,23 @@
+
+// dont change this file
+// override in Packages/User/ProjectAndWorkspaceManagement.sublime-settings instead\
+// there should be a `Project And Workspace Management: Edit Settings` command in the pallate
+// just drop an issue at https://github.com/tshrpl/ProjectAndWorkspaceManagement/issues if
+// you are having some trouble, but check the other issues before that, might save you some time
+
+{
+
+	// replace `\` with `\\`
+	"default_project_path": "/projects/<project_name>",
+
+	// a relative (to project root) path where .sublime-workspace files are stored
+	"workspaces_subpath": ".sublime_workspace",
+
+	// the default .sublime-project file, everything should be properly escaped
+	// just drop an issue at https://github.com/tshrpl/ProjectAndWorkspaceManagement/issues if you need some help
+	"default_project_file_text": "{\n\t\"folders\": [\n\t\t{\n\t\t\t\"path\": \".\",\n\t\t\t\"folder_exclude_patterns\": [\".sublime_workspaces\"]\n\t\t}\n\t]\n}",
+
+	// the default .gitignore file, everything should be properly escaped
+	"default_gitignore_file_text": "\n#sublime text files\n.sublime_workspaces/\n"
+ 
+}

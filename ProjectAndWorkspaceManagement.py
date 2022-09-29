@@ -6,16 +6,8 @@ import json
 import subprocess
 
 
+SETTINGS_FILE_NAME = "ProjectAndWorkspaceManagement.sublime-settings"
 
-DEFAULT_PROJECT_FILE_TEXT = """{
-	"folders":
-	[
-		{
-			"path": ".",
-			"folder_exclude_patterns": [".sublime_workspaces"]
-		}
-	]
-}"""
 
 
 #####################
@@ -33,6 +25,9 @@ def get_platform_specific_path(platform, path):
 	if platform == 'windows':
 		path = path[1]+':\\'+path[2:].replace('/', '\\')
 	return path
+
+def workspaces_path():
+	return sublime.load_settings(SETTINGS_FILE_NAME)['workspaces_subpath'].strip('/').strip('\\')
 
 
 
@@ -68,7 +63,7 @@ def subl(*args):
 class NewProjectPathInputHandler(sublime_plugin.TextInputHandler):
 
 	def initial_text(self):
-		return "/projects/<full_project_path>"
+		return sublime.load_settings(SETTINGS_FILE_NAME)['default_project_path']
 
 	def placeholder(Self):
 		return "Enter full project path"
@@ -99,14 +94,14 @@ class ProjectAndWorkspaceManagementNewProjectCommand(sublime_plugin.ApplicationC
 		project_file_path = path / (project_name+'.sublime-project')
 		# make project file
 		with open(project_file_path, 'w') as f:
-			f.write(DEFAULT_PROJECT_FILE_TEXT)
+			f.write(sublime.load_settings(SETTINGS_FILE_NAME)['default_project_file_text'])
 
 		gitignore_file_path = path / '.gitignore'
 		# make .gitignore file
 		with open(gitignore_file_path, 'w') as f:
-			f.write('#folders\n.sublime_workspaces/')
+			f.write(sublime.load_settings(SETTINGS_FILE_NAME)['default_gitignore_file_text'])
 
-		path = path/'.sublime_workspaces'
+		path = path / workspaces_path()
 		path.mkdir(parents=True)
 
 		# make workspace file inside workspace folder
@@ -133,8 +128,8 @@ class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 		global variables
 		if 'project_name' in variables.keys():
 			try:
-				if (Path(variables['project_path']) / ('.sublime_workspaces/w1 '+variables['project_base_name']+'.sublime-workspace')).exists():
-					n = sorted([int(x.name.split(' ')[0][1:]) for x in (Path(variables['project_path']) / '.sublime_workspaces').glob('**/*')])[-1]
+				if (Path(variables['project_path']) / (f'{workspaces_path()}/w1 '+variables['project_base_name']+'.sublime-workspace')).exists():
+					n = sorted([int(x.name.split(' ')[0][1:]) for x in (Path(variables['project_path']) / workspaces_path()).glob('**/*')])[-1]
 					return f'w{str(n+1)} {variables["project_base_name"]}'
 			except Exception:
 				pass
@@ -147,12 +142,12 @@ class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 		return 'name'
 
 	def preview(self, text):
-		if (Path(variables['project_path']) / (f'.sublime_workspaces/{text}.sublime-workspace')).exists():
+		if (Path(variables['project_path']) / (f'{workspaces_path()}/{text}.sublime-workspace')).exists():
 			return sublime.Html(f"<b>Workspace already exists</b>")
 		return sublime.Html(f"<strong>Creating New workspace</strong> <em>{text}</em>")
 
 	def validate(self, text):
-		if (Path(variables['project_path']) / (f'.sublime_workspaces/{text}.sublime-workspace')).exists():
+		if (Path(variables['project_path']) / (f'{workspaces_path()}/{text}.sublime-workspace')).exists():
 			return False
 		return True
 
@@ -161,7 +156,7 @@ class NewWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 class ProjectAndWorkspaceManagementNewWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, new_workspace_name):
-		path = Path(variables['project_path']) / '.sublime_workspaces'
+		path = Path(variables['project_path']) / workspaces_path()
 		if not path.exists():
 			path.mkdir(parents=True)
 
@@ -188,7 +183,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 
 	def list_items(self):
 		try:
-			path = Path(variables['project_path']) / '.sublime_workspaces/'
+			path = Path(variables['project_path']) / f'{workspaces_path()}/'
 			self.file_name_paths = [x for x in (path).glob('**/*') if x.is_file()]
 			self.file_names = [x.name.replace('.sublime-workspace','') for x in self.file_name_paths]
 			return [(x, i) for i,x in enumerate(self.file_names)]
@@ -197,7 +192,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 
 	def preview(self, value):
 		try:
-			if not (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+			if not (Path(variables['project_path']) / f'{workspaces_path()}/').exists():
 				return sublime.Html(f"<b>No workspaces found</b>")
 		except Exception:
 			return sublime.Html("No open projects")
@@ -205,7 +200,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 
 	def validate(self, value):
 		try:
-			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+			if (Path(variables['project_path']) / f'{workspaces_path()}/').exists():
 				return True
 		except Exception:
 			pass
@@ -216,7 +211,7 @@ class OpenWorkspaceIndexInputHandler(sublime_plugin.ListInputHandler):
 class ProjectAndWorkspaceManagementOpenWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, open_workspace_index):
-		path = Path(variables['project_path']) / '.sublime_workspaces/'
+		path = Path(variables['project_path']) / f'{workspaces_path()}/'
 		file_names = [x for x in (path).glob('**/*') if x.is_file()]
 
 		subl('--project', file_names[open_workspace_index])
@@ -236,7 +231,7 @@ class GetWorkspaceIndexToRenameInputHandler(sublime_plugin.ListInputHandler):
 
 	def list_items(self):
 		try:
-			path = Path(variables['project_path']) / '.sublime_workspaces/'
+			path = Path(variables['project_path']) / f'{workspaces_path()}/'
 			self.file_name_paths = [x for x in (path).glob('**/*') if x.is_file()]
 			self.file_names = [x.name.replace('.sublime-workspace','') for x in self.file_name_paths]
 			return [(x, i) for i,x in enumerate(self.file_names)]
@@ -245,7 +240,7 @@ class GetWorkspaceIndexToRenameInputHandler(sublime_plugin.ListInputHandler):
 
 	def preview(self, value):
 		try:
-			if not (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+			if not (Path(variables['project_path']) / workspaces_path()).exists():
 				return sublime.Html(f"<b>No workspaces found</b>")
 		except Exception:
 			return sublime.Html("No open projects")
@@ -253,7 +248,7 @@ class GetWorkspaceIndexToRenameInputHandler(sublime_plugin.ListInputHandler):
 
 	def validate(self, value):
 		try:
-			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
+			if (Path(variables['project_path']) / workspaces_path()).exists():
 				return True
 		except Exception:
 			pass
@@ -276,7 +271,7 @@ class RenameWorkspaceNameInputHandler(sublime_plugin.TextInputHandler):
 class ProjectAndWorkspaceManagementRenameWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, get_workspace_index_to_rename, rename_workspace_name):
-		path = Path(variables['project_path']) / '.sublime_workspaces/'
+		path = Path(variables['project_path']) / workspaces_path()
 		current_workspace_path = [x for x in (path).glob('**/*') if x.is_file()][get_workspace_index_to_rename]
 		new_path = Path(current_workspace_path.parent, rename_workspace_name + current_workspace_path.suffix)
 
@@ -303,7 +298,7 @@ class GetWorkspaceIndexToDeleteInputHandler(sublime_plugin.ListInputHandler):
 	def list_items(self):
 		r = []
 		try:
-			path = Path(variables['project_path']) / '.sublime_workspaces/'
+			path = Path(variables['project_path']) / workspaces_path()
 			self.file_name_paths = [x for x in (path).glob('**/*') if x.is_file()]
 			self.file_names = [x.name.replace('.sublime-workspace','') for x in self.file_name_paths]
 			r += [(x, i) for i,x in enumerate(self.file_names)]
@@ -314,8 +309,8 @@ class GetWorkspaceIndexToDeleteInputHandler(sublime_plugin.ListInputHandler):
 
 	def preview(self, value):
 		try:
-			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
-				if any((Path(variables['project_path']) / '.sublime_workspaces/').iterdir()):
+			if (Path(variables['project_path']) / workspaces_path()).exists():
+				if any((Path(variables['project_path']) / workspaces_path()).iterdir()):
 					return sublime.Html(f"<strong>Deleting workspace</strong> {self.file_names[value]}")
 		except Exception:
 			return sublime.Html("No open projects")
@@ -323,8 +318,8 @@ class GetWorkspaceIndexToDeleteInputHandler(sublime_plugin.ListInputHandler):
 
 	def validate(self, value):
 		try:
-			if (Path(variables['project_path']) / '.sublime_workspaces/').exists():
-				if any((Path(variables['project_path']) / '.sublime_workspaces/').iterdir()):
+			if (Path(variables['project_path']) / workspaces_path()).exists():
+				if any((Path(variables['project_path']) / workspaces_path()).iterdir()):
 					return True
 		except Exception:
 			pass
@@ -335,7 +330,7 @@ class GetWorkspaceIndexToDeleteInputHandler(sublime_plugin.ListInputHandler):
 class ProjectAndWorkspaceManagementDeleteWorkspaceCommand(sublime_plugin.WindowCommand):
 
 	def run(self, get_workspace_index_to_delete):
-		path = Path(variables['project_path']) / '.sublime_workspaces/'
+		path = Path(variables['project_path']) / workspaces_path()
 		current_workspace_path = [x for x in (path).glob('**/*') if x.is_file()][get_workspace_index_to_delete]
 
 		current_workspace_path.unlink()
@@ -363,15 +358,15 @@ class ProjectAndWorkspaceManagementCreateProjectFilesAtExistingFolderCommand(sub
 		project_file_path = path / (project_name+'.sublime-project')
 		# make project file
 		with open(project_file_path, 'w') as f:
-			f.write(DEFAULT_PROJECT_FILE_TEXT)
+			f.write(sublime.load_settings(SETTINGS_FILE_NAME)['default_project_file_text'])
 
 		gitignore_file_path = path / '.gitignore'
 		# make .gitignore file
 		with open(gitignore_file_path, 'a') as f:
-			f.write('\n.sublime_workspaces/')
+			f.write('\n' + sublime.load_settings(SETTINGS_FILE_NAME)['workspaces_subpath'].strip('/','\\') + '/')
 
 		try:
-			path = path/'.sublime_workspaces'
+			path = path / workspaces_path()
 			path.mkdir(parents=True)
 
 			# make workspace file inside workspace folder
@@ -396,7 +391,7 @@ class projectAndWorkspaceManagementImportProjectFilesAtCurrentFolder(sublime_plu
 		project_name = path.name
 
 		workspaces_data = []
-		for workspace_file_path in path.glob('.sublime_workspaces/*.sublime-workspace'):
+		for workspace_file_path in path.glob(f'{workspaces_path()}/*.sublime-workspace'):
 			with open(workspace_file_path, 'r') as workspace_file:
 				workspaces_data.append((json.loads(workspace_file.read()), workspace_file_path))
 		
