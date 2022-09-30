@@ -1,3 +1,6 @@
+# 0.1.4
+- fixed bug in default settings
+
 # 0.1.3
 - commands: `edit settings`
 - added a default `sublime-settings` file and user overrides
