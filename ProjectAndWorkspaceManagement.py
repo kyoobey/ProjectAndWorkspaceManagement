@@ -72,12 +72,12 @@ class NewProjectPathInputHandler(sublime_plugin.TextInputHandler):
 		return 'path'
 
 	def preview(self, text):
-		if Path(text).exists():
+		if Path(os.path.expanduser(text)).exists():
 			return sublime.Html(f"<b>Path already exists</b>")
 		return sublime.Html(f"<strong>Creating Project at </strong> <em>{text}</em>")
 
 	def validate(self, text):
-		if Path(text).exists():
+		if Path(os.path.expanduser(text)).exists():
 			return False
 		return True
 
@@ -86,7 +86,7 @@ class NewProjectPathInputHandler(sublime_plugin.TextInputHandler):
 class ProjectAndWorkspaceManagementNewProjectCommand(sublime_plugin.ApplicationCommand):
 
 	def run(self, new_project_path):
-		path = Path(new_project_path)
+		path = Path(os.path.expanduser(new_project_path))
 		project_name = path.name
 
 		path.mkdir(parents=True)
