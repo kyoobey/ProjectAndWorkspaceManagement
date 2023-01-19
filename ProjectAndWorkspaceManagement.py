@@ -362,8 +362,8 @@ class ProjectAndWorkspaceManagementCreateProjectFilesAtExistingFolderCommand(sub
 
 		gitignore_file_path = path / '.gitignore'
 		# make .gitignore file
-		with open(gitignore_file_path, 'a') as f:
-			f.write('\n' + sublime.load_settings(SETTINGS_FILE_NAME)['workspaces_subpath'].strip('/','\\') + '/')
+		with open(gitignore_file_path, 'w') as f:
+			f.write(sublime.load_settings(SETTINGS_FILE_NAME)['default_gitignore_file_text'])
 
 		try:
 			path = path / workspaces_path()
