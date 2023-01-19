@@ -1,3 +1,7 @@
+# 0.1.5
+- fixed fatal bug
+- support for `~` in new project path
+
 # 0.1.4
 - fixed bug in default settings
 
