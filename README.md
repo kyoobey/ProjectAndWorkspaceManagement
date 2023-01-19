@@ -19,10 +19,16 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 | Import Project Files At Current Folder | Edits `workspace` files inside `.sublime_workspaces/` to work with the new project path and rename Project/Workspace files (__use with caution__ and __only use once on a copied/moved project__)
 
 # Settings
-> todo, will link to the wiki page when its done
+| Commands                       | Function |
+|--------------------------------|----------|
+| `default_project_path`         | default value for `New Project` input |
+| `workspaces_subpath`           | properly formatted path to store workspaces to (e.g. `.sublime-workspaces`, `.sublime/workspaces`) |
+| `default_project_file_text`    | properly formatted json text for `<project>.sublime-project` file |
+| `default_gitignore_file_text`  | properly formatted json text for `.gitignore` file |
 
 # Todo
 - [ ] store and search for existing project files on disk
+- [ ] support for centralization (absolute paths in `workspaces_subpath` and/or `default_project_path`)
 
 # License
 Project And Workspace Management is [MIT licensed](https://github.com/tshrpl/ProjectManagement/blob/master/LICENSE.txt).
