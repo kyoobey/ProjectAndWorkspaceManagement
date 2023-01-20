@@ -31,7 +31,7 @@
 		"caption": "Project And Workspace Management: Edit Settings",
 		"command": "edit_settings",
 		"args": {
-			"base_file": "${packages}/ProjectAndWorkspaceManagement/ProjectAndWorkspaceManagement.sublime-settings",
+			"base_file": "${packages}/Project And Workspace Management/ProjectAndWorkspaceManagement.sublime-settings",
 			"user_file": "${packages}/User/ProjectAndWorkspaceManagement.sublime-settings",
 			"default": "// overrides settings in ProjectAndWorkspaceManagement/ProjectAndWorkspaceManagement.sublime-settings\n{\n\t$0\n}\n"
 		}
