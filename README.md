@@ -28,7 +28,7 @@ This plugin helps you manage your sublime workspace files. You can create and qu
 
 # Todo
 - [ ] search for existing project files on disk
-- [x] support for centralization (absolute paths in `workspaces_subpath` and/or `default_project_path`)
+- [ ] support for centralization (absolute paths in `workspaces_subpath` and/or `default_project_path`)
 
 # License
 Project And Workspace Management is [MIT licensed](https://github.com/tshrpl/ProjectManagement/blob/master/LICENSE.txt).
